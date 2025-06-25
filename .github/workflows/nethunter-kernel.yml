@@ -31,7 +31,7 @@ jobs:
         make -j$(nproc)
 
     - name: 📁 Upload zImage or Image.gz-dtb
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: NetHunter-Kernel-A30s
         path: |
