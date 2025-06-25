@@ -27,7 +27,7 @@ jobs:
         export ARCH=arm64
         export SUBARCH=arm64
         export CROSS_COMPILE=aarch64-elf-
-        make a30s-deconfig
+        make a30s-defconfig
         make -j$(nproc)
 
     - name: 📁 Upload zImage or Image.gz-dtb
