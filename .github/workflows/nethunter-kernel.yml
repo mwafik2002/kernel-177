@@ -1,0 +1,38 @@
+name: Build NetHunter Kernel for A30s
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Compile Kernel
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 📦 Clone Kernel Source
+      uses: actions/checkout@v3
+
+    - name: 🛠️ Set up environment
+      run: |
+        sudo apt update
+        sudo apt install -y bc bison flex libssl-dev make libc6-dev libncurses5-dev git ccache
+        git clone --depth=1 https://github.com/arter97/arm64-gcc.git toolchain
+        export PATH=$PWD/toolchain/bin:$PATH
+
+    - name: ⚙️ Compile Kernel
+      run: |
+        export ARCH=arm64
+        export SUBARCH=arm64
+        export CROSS_COMPILE=aarch64-elf-
+        make a30s-deconfig
+        make -j$(nproc)
+
+    - name: 📁 Upload zImage or Image.gz-dtb
+      uses: actions/upload-artifact@v3
+      with:
+        name: NetHunter-Kernel-A30s
+        path: |
+          arch/arm64/boot/Image.gz-dtb
